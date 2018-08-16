@@ -17,6 +17,7 @@
 
 subprojects {
   apply plugin: 'com.bmuschko.nexus'
+  apply plugin: 'maven-publish'
   
   extraArchive {
     sources = true
@@ -119,6 +120,25 @@ subprojects {
             }
           }
         }
+      }
+    }
+  }
+
+  publishing {
+    publications {
+      maven(MavenPublication) {
+        from components.java
+      }
+    }
+    repositories {
+      maven {
+        url = "gcs://maven-test"
+//        credentials {
+//          username "GOOG3N6RA6SYI4HDDXWCMW5Y"
+//          password "wsSNy6Td7WRgr2hegKQjaexMOTC0qBiSL/rBJrQ8"
+//
+//        }
+//        url = "https://storage.googleapis.com/maven-test/"
       }
     }
   }
