@@ -73,7 +73,7 @@ pushd ${SCRIPTDIR} 2>&1 > /dev/null
   # Template and output share a directory with this script, but variables are shared in the parent directory.
   python3 ../render.py jinja.template.yml ../shared/jinja.variables.yml generated-pipeline.yml || exit 1
 
-  cat generated-pipeline.yml
+  grep -n . generated-pipeline.yml
 
   fly login -t ${TARGET} \
             -n ${TEAM} \
