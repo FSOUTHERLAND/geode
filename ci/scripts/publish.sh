@@ -88,7 +88,7 @@ ln -s ${ROOT_DIR}/geode ${GEODE_BUILD_DIR}
 pushd ${GEODE_BUILD_DIR}
 set +e
 set -x
-./gradlew --no-daemon --parallel -PbuildId=${BUILD_ID} --system-prop publish
+./gradlew --no-daemon --parallel -PbuildId=${BUILD_ID} publish
 GRADLE_EXIT_STATUS=$?
 set +x
 set -e
