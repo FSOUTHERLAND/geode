@@ -70,9 +70,6 @@ else
   FULL_PRODUCT_VERSION="geode-pr-${GEODE_PULL_REQUEST_ID}"
 fi
 
-echo -n "${FULL_PRODUCT_VERSION}" > ${GEODE_RESULTS_VERSION_FILE}
-
-
 printf "\nUsing the following JDK:"
 java -version
 printf "\n\n"
