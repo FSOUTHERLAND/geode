@@ -19,8 +19,8 @@ TARGET=geode
 GEODE_FORK=${1}
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 GEODE_BRANCH=${2:-${CURRENT_BRANCH}}
-SANITIZED_GEODE_BRANCH=$(echo ${GEODE_BRANCH} | tr "/" "-" | tr '[:upper:]' '[:lower:]') | cut -c 1-20
-SANITIZED_GEODE_FORK=$(echo ${GEODE_FORK} | tr "/" "-" | tr '[:upper:]' '[:lower:]') | cut -c 1-16
+SANITIZED_GEODE_BRANCH=$(echo ${GEODE_BRANCH} | tr "/" "-" | tr '[:upper:]' '[:lower:]' | cut -c 1-20)
+SANITIZED_GEODE_FORK=$(echo ${GEODE_FORK} | tr "/" "-" | tr '[:upper:]' '[:lower:]' | cut -c 1-16)
 TEAM=$(fly targets | grep ^${TARGET} | awk '{print $3}')
 
 if [[ -z "${GEODE_FORK}" ]]; then
@@ -32,22 +32,22 @@ echo "Fork is ${GEODE_FORK}"
 echo "Branch is ${GEODE_BRANCH}"
 
 echo "Deleting meta pipeline if it exists..."
-META_PIPELINE="meta-${GEODE_FORK}-${SANITIZED_GEODE_BRANCH}"
+META_PIPELINE="meta-${SANITIZIED_GEODE_FORK}-${SANITIZED_GEODE_BRANCH}"
 fly -t ${TARGET} destroy-pipeline --non-interactive -p ${META_PIPELINE}
 
 echo "Deleting images pipeline if it exists..."
-IMAGES_PIPELINE="${GEODE_FORK}-${SANITIZED_GEODE_BRANCH}-images"
+IMAGES_PIPELINE="${SANITIZIED_GEODE_FORK}-${SANITIZED_GEODE_BRANCH}-images"
 fly -t ${TARGET} destroy-pipeline --non-interactive -p ${IMAGES_PIPELINE}
 
 echo "Deleting reaper pipeline if it exists..."
-REAPER_PIPELINE="${GEODE_FORK}-${SANITIZED_GEODE_BRANCH}-reaper"
+REAPER_PIPELINE="${SANITIZIED_GEODE_FORK}-${SANITIZED_GEODE_BRANCH}-reaper"
 fly -t ${TARGET} destroy-pipeline --non-interactive -p ${REAPER_PIPELINE}
 
 echo "Deleting build pipeline if it exists..."
-BUILD_PIPELINE="${GEODE_FORK}-${SANITIZED_GEODE_BRANCH}"
+BUILD_PIPELINE="${SANITIZIED_GEODE_FORK}-${SANITIZED_GEODE_BRANCH}"
 fly -t ${TARGET} destroy-pipeline --non-interactive -p ${BUILD_PIPELINE}
 
-gcloud container images list | grep "${GEODE_FORK}-${SANITIZED_GEODE_BRANCH}" | while IFS= read -r line; do
+gcloud container images list | grep "${SANITIZIED_GEODE_FORK}-${SANITIZED_GEODE_BRANCH}" | while IFS= read -r line; do
   echo "Deleting image: ${line}"
   gcloud container images delete ${line}:latest --quiet
   gcloud container images list-tags ${line} --filter='-tags:*'  --format='get(digest)' | while IFS= read -r line2; do
@@ -56,8 +56,7 @@ gcloud container images list | grep "${GEODE_FORK}-${SANITIZED_GEODE_BRANCH}" | 
   done
 done
 
-gcloud compute images list | awk "/^${GEODE_FORK}-${SANITIZED_GEODE_BRANCH}/ {print \$1}" | while IFS= read -r line; do
+gcloud compute images list | awk "/^${SANITIZIED_GEODE_FORK}-${SANITIZED_GEODE_BRANCH}/ {print \$1}" | while IFS= read -r line; do
   echo "Deleting image: ${line}"
   gcloud compute images delete ${line} --quiet
 done
-

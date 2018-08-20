@@ -36,8 +36,8 @@ if [ "${GEODE_BRANCH}" = "HEAD" ]; then
   exit 1
 fi
 
-SANITIZED_GEODE_BRANCH=$(echo ${GEODE_BRANCH} | tr "/" "-" | tr '[:upper:]' '[:lower:]') | cut -c 1-20
-SANITIZED_GEODE_FORK=$(echo ${GEODE_FORK} | tr "/" "-" | tr '[:upper:]' '[:lower:]') | cut -c 1-16
+SANITIZED_GEODE_BRANCH=$(echo ${GEODE_BRANCH} | tr "/" "-" | tr '[:upper:]' '[:lower:]' | cut -c 1-20)
+SANITIZED_GEODE_FORK=$(echo ${GEODE_FORK} | tr "/" "-" | tr '[:upper:]' '[:lower:]' | cut -c 1-16)
 
 BIN_DIR=${OUTPUT_DIRECTORY}/bin
 TMP_DIR=${OUTPUT_DIRECTORY}/tmp
@@ -51,11 +51,11 @@ TARGET="geode"
 
 TEAM=${CONCOURSE_TEAM}
 
-if [[ "${GEODE_FORK}" == "apache" ]]; then
+if [[ "${SANITIZIED_GEODE_FORK}" == "apache" ]]; then
   PIPELINE_PREFIX=""
   DOCKER_IMAGE_PREFIX=""
 else
-  PIPELINE_PREFIX="${GEODE_FORK}-${SANITIZED_GEODE_BRANCH}-"
+  PIPELINE_PREFIX="${SANITIZIED_GEODE_FORK}-${SANITIZED_GEODE_BRANCH}-"
   DOCKER_IMAGE_PREFIX=${PIPELINE_PREFIX}
 fi
 
@@ -76,4 +76,3 @@ fly -t ${TARGET} set-pipeline \
   --var geode-build-branch=${GEODE_BRANCH} \
   --var docker-image-prefix=${DOCKER_IMAGE_PREFIX} \
   --yaml-var public-pipelines=${PUBLIC_PIPELINES}
-

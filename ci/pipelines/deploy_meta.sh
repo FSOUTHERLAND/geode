@@ -16,10 +16,10 @@
 # limitations under the License.
 
 GEODE_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-SANITIZED_GEODE_BRANCH=$(echo ${GEODE_BRANCH} | tr "/" "-" | tr '[:upper:]' '[:lower:]') | cut -c 1-20
+SANITIZED_GEODE_BRANCH=$(echo ${GEODE_BRANCH} | tr "/" "-" | tr '[:upper:]' '[:lower:]' | cut -c 1-20)
 TARGET=geode
 GEODE_FORK=${1:-apache}
-SANITIZED_GEODE_FORK=$(echo ${GEODE_FORK} | tr "/" "-" | tr '[:upper:]' '[:lower:]') | cut -c 1-16
+SANITIZED_GEODE_FORK=$(echo ${GEODE_FORK} | tr "/" "-" | tr '[:upper:]' '[:lower:]' | cut -c 1-16)
 TEAM=$(fly targets | grep ^${TARGET} | awk '{print $3}')
 
 PUBLIC=true
