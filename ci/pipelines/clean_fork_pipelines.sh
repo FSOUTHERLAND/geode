@@ -19,7 +19,8 @@ TARGET=geode
 GEODE_FORK=${1}
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 GEODE_BRANCH=${2:-${CURRENT_BRANCH}}
-SANITIZED_GEODE_BRANCH=$(echo ${GEODE_BRANCH} | tr "/" "-" | tr '[:upper:]' '[:lower:]')
+SANITIZED_GEODE_BRANCH=$(echo ${GEODE_BRANCH} | tr "/" "-" | tr '[:upper:]' '[:lower:]') | cut -c 1-20
+SANITIZED_GEODE_FORK=$(echo ${GEODE_FORK} | tr "/" "-" | tr '[:upper:]' '[:lower:]') | cut -c 1-16
 TEAM=$(fly targets | grep ^${TARGET} | awk '{print $3}')
 
 if [[ -z "${GEODE_FORK}" ]]; then
@@ -39,7 +40,7 @@ IMAGES_PIPELINE="${GEODE_FORK}-${SANITIZED_GEODE_BRANCH}-images"
 fly -t ${TARGET} destroy-pipeline --non-interactive -p ${IMAGES_PIPELINE}
 
 echo "Deleting reaper pipeline if it exists..."
-REAPER_PIPELINE="${GEOD_FORK}-${SANITIZED_GEODE_BRANCH}-reaper"
+REAPER_PIPELINE="${GEODE_FORK}-${SANITIZED_GEODE_BRANCH}-reaper"
 fly -t ${TARGET} destroy-pipeline --non-interactive -p ${REAPER_PIPELINE}
 
 echo "Deleting build pipeline if it exists..."
